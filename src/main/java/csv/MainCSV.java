@@ -30,6 +30,11 @@ public class MainCSV {
     private static String pathOut = getProperty("user.dir") + "/src/main/java/csv/csv_out/";
 
     public static void main(String[] args) {
+        if (!isNull(args)) {
+            pathIn = args[0];
+            if (args.length == 2)
+                pathOut = args[1];
+        }
         try (Stream<Path> paths = Files.walk(Paths.get(pathIn))) {
             Optional<List<Product>> reduce = paths
                     .filter(Files::isRegularFile)
