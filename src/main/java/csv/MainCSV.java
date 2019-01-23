@@ -19,8 +19,10 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.lang.System.getProperty;
+import static java.util.Arrays.asList;
+import static java.util.Arrays.parallelSort;
 import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.groupingByConcurrent;
 import static java.util.stream.Collectors.toList;
 
 public class MainCSV {
@@ -71,13 +73,14 @@ public class MainCSV {
     private static List<Product> getProducts(List<Product> parse) {
         return parse
                 .parallelStream()
-                .collect(groupingBy(Product::getID))
+                .collect(groupingByConcurrent(Product::getID))
                 .values()
                 .parallelStream()
                 .map(listSameIds -> {
                     if (listSameIds.size() > LIM_IDs) {
-                        listSameIds.sort(Product::compareTo);
-                        return listSameIds.subList(0, LIM_IDs);
+                        Product[] productsArr = listSameIds.toArray(new Product[listSameIds.size()]);
+                        parallelSort(productsArr, Product::compareTo);
+                        return asList(productsArr).subList(0, LIM_IDs);
                     } else return listSameIds;
                 }).reduce((listNoMore20_1, listNoMore20_2) -> {
                     listNoMore20_1.addAll(listNoMore20_2);
