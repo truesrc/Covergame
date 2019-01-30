@@ -21,7 +21,7 @@ import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toList;
 
 public class MainCSV {
-    private static final int LIM_IDs = 7;
+    private static final int LIM_IDs = 3;
     private static final int LIM_PRDS = 30;
     private static String pathIn = getProperty("user.dir") + "/src/main/java/csv/csv_in/";
     private static String pathOut = getProperty("user.dir") + "/src/main/java/csv/csv_out/";
@@ -66,22 +66,22 @@ public class MainCSV {
         Map<Integer, PriorityQueue<Product>> map = new HashMap<>();
         for (Product product : parse) {
             if (!map.containsKey(product.getID())) {
-                PriorityQueue<Product> integers = new PriorityQueue<>(cmp);
-                integers.add(product);
-                map.put(product.getID(), integers);
+                PriorityQueue<Product> productsWithSameID = new PriorityQueue<>(cmp);
+                productsWithSameID.add(product);
+                map.put(product.getID(), productsWithSameID);
             } else {
-                PriorityQueue<Product> integers = map.get(product.getID());
-                integers.add(product);
-                map.put(product.getID(), integers);
-                if (integers.size() > LIM_IDs) {
-                    integers.poll();
+                PriorityQueue<Product> productsWithSameID = map.get(product.getID());
+                productsWithSameID.add(product);
+                map.put(product.getID(), productsWithSameID);
+                if (productsWithSameID.size() > LIM_IDs) {
+                    productsWithSameID.poll();
                 }
             }
         }
         PriorityQueue<Product> priorityQueueM = new PriorityQueue<>(LIM_PRDS, cmp);
-        for (PriorityQueue<Product> values : map.values()) {
-            for (int i = 0; i < values.size(); ) {
-                priorityQueueM.add(values.poll());
+        for (PriorityQueue<Product> productsWithSameID : map.values()) {
+            for (int i = 0; i < productsWithSameID.size(); ) {
+                priorityQueueM.add(productsWithSameID.poll());
                 if (priorityQueueM.size() > LIM_PRDS) {
                     priorityQueueM.poll();
                 }
