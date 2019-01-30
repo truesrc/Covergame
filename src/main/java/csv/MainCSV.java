@@ -23,7 +23,9 @@ import static java.util.stream.Collectors.toList;
 public class MainCSV {
     private static final int LIM_IDs = 3;
     private static final int LIM_PRDS = 30;
+    // Установите сами дир. где лежат csv`s
     private static String pathIn = getProperty("user.dir") + "/src/main/java/csv/csv_in/";
+    // Установите дир. где будет лежать итоговый csv
     private static String pathOut = getProperty("user.dir") + "/src/main/java/csv/csv_out/";
 
     public static void main(String[] args) {
